@@ -1,0 +1,51 @@
+#服务器配置
+server:
+  port: 8606
+#数据库配置
+spring:
+  #MySQL
+  datasource:
+    username: th
+    password: cf6xQnJVcnmm=v8*#2g#ucPbm7n9W!Hf
+    url: jdbc:mysql://localhost:4303/th?useUnicode=true&characterEncoding=utf-8&serverTimezone=CTT
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #neo4j
+  data:
+    neo4j:
+      uri: bolt://101.37.156.17
+      username: neo4j
+      password: CgSuL&%bs3
+  #redis
+  redis:
+    database: 0
+    timeout: 0
+    host: 127.0.0.1
+    port: 8303
+    password: ENC(f9avypHFAb+6hECkPUoChhh8g9TzrEUcXaLcJfVZCwgvCdPth3H/YqVEnD5Wkc/J)
+  #邮箱验证所需的账户
+  mail:
+    auth: true
+    host: smtp.exmail.qq.com
+    user: info@oceanstellar.com   #公司的企业微信
+    password: SRQM3dAF4jqWYinm    #公司企业微信的客户端授权码
+#mybatis-plus
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.ohx.entity
+  configuration:
+    #    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    enable-sql-runner: true
+#拦截器的路径
+config:
+  path:
+    #拦截地址
+    special:
+      - /**
+    #忽略拦截的路径
+    exclude:
+      - /api/hsyq/user/login
+      - /api/warship_img/**
+      - /api/commander_img/**
+      - /error

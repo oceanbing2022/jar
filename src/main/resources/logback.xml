@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="1 seconds" debug="false">
+    <!-- logfile path -->
+    <property name="log.path" value="./logs"/>
+    <!-- 日志的格式
+        %d          表示日期
+        %thread     表示线程名
+        %-5level    日志级别，从左显示5个字符宽度
+        %logger{56} 日志打印所属的类名，限定长度56个字符
+        %msg        日志消息
+        %n          是换行符
+        颜色设置    %颜色（以上参数），例如，%highlight(%-5level)
+        支持颜色    "%black", "%red", "%green","%yellow","%blue", "%magenta","%cyan", "%white", "%gray", "%boldRed",
+                    "%boldGreen", "%boldYellow", "%boldBlue", "%boldMagenta""%boldCyan", "%boldWhite" and "%highlight"
+    -->
+    <property name="LOG_FORMAT" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-5level] [%logger{56}]: %msg%n"/>
+    <property name="LOG_COLOR_FORMAT" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %green(%-5level) --- [%15.15(%thread)] %cyan(%-40.40(%logger{40})) : %msg%n"/>
+    
+    <!-- 控制台打印日志的相关配置 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 设置日志过滤器级别，打印INFO级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <!-- 控制台日志格式 -->
+        <encoder>
+            <pattern>${LOG_COLOR_FORMAT}</pattern>     
+        </encoder>
+        
+    </appender>
+
+    <!-- 文件保存日志的相关配置 -->
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!--        <file>${log.path}/info</file>-->
+        <!-- 过滤掉 INFO 级别的日志-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+            <!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+            <!--            <level>INFO</level>-->
+            <!--            <onMatch>ACCEPT</onMatch>-->
+            <!--            <onMismatch>DENY</onMismatch>-->
+            <!--        </filter>-->
+            <!--        onMatch="ACCEPT" 表示匹配该级别及以上-->
+            <!--        onMatch="DENY" 表示不匹配该级别及以上-->
+            <!--        onMatch="NEUTRAL" 表示该级别及以上的，由下一个filter处理，如果当前是最后一个，则表示匹配该级别及以上-->
+            <!--        onMismatch="ACCEPT" 表示匹配该级别以下-->
+            <!--        onMismatch="NEUTRAL" 表示该级别及以下的，由下一个filter处理，如果当前是最后一个，则不匹配该级别以下的-->
+            <!--        onMismatch="DENY" 表示不匹配该级别以下的-->
+        </filter>
+        
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${log.path}/%d{yyyy-MM-dd}/info.log</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>180</MaxHistory>
+            <!--日志文件最大的大小-->
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <!--格式化输出-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_FORMAT}</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 日志级别过滤器 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 过滤的级别 -->
+            <level>ERROR</level>
+            <!-- 匹配时的操作：接收（记录） -->
+            <onMatch>ACCEPT</onMatch>
+            <!-- 不匹配时的操作：拒绝（不记录） -->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+        <!-- 循环政策：基于时间创建日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件名格式 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM-dd}/error.log</fileNamePattern>
+            <!-- 最大保存时间：180天-->
+            <maxHistory>180</maxHistory>
+            <!--日志文件最大的大小-->
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <!-- 日志格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_FORMAT}</pattern>
+        </encoder>
+
+    </appender>
+
+    <!-- 基于dubug处理日志：具体控制台或者文件对日志级别的处理还要看所在appender配置的filter，如果没有配置filter，则使用root配置 -->
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="INFO" />
+        <appender-ref ref="ERROR" />
+    </root>
+</configuration>
